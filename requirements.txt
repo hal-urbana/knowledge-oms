@@ -1,0 +1,16 @@
+# Knowledge OMS - Requirements
+# Esri Knowledge + LightRAG + UDL Integration
+
+# ArcGIS/Knowledge
+requests>=2.28.0
+urllib3>=1.26.0
+
+# LightRAG
+numpy>=1.21.0
+
+# Kafka/UDL
+kafka-python>=2.0.2
+
+# Utilities
+python-dotenv>=0.19.0
+pydantic>=2.0.0
