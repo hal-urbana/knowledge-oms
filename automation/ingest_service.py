@@ -161,43 +161,72 @@ class IngestService:
         
         logger.info(f"Flushing batch of {len(batch)} entities")
         
-        entities = []
         for data in batch:
             try:
-                entity = Entity(
+                # 1. Create primary entity
+                primary_entity = Entity(
                     name=data.get('name', 'Unknown'),
                     type_name=data.get('type_name', 'UDLObject'),
                     properties=data.get('properties', {})
                 )
-                entities.append(entity)
-            except Exception as e:
-                logger.warning(f"Failed to create entity: {e}")
-                self.stats.fail_count += 1
-        
-        if entities:
-            # Batch create in ArcGIS Knowledge
-            try:
-                created = self.kg.create_entities_batch(self.kg_id, entities)
-                self.stats.entities_created += len(created)
-                self.stats.success_count += len(created)
+                
+                created_primary = self.kg.create_entity(self.kg_id, primary_entity)
+                self.stats.entities_created += 1
+                self.stats.success_count += 1
                 
                 # Index in LightRAG
-                for entity in created:
-                    if entity.entity_id:
+                if created_primary.entity_id:
+                    self.rag.index_entity(
+                        entity_id=created_primary.entity_id,
+                        name=created_primary.name,
+                        description=created_primary.properties.get('description', ''),
+                        properties=created_primary.properties,
+                        entity_type=created_primary.type_name
+                    )
+                    self.stats.indexed_count += 1
+                
+                # 2. Create associated entities and relationships
+                associated_data = data.get('associated_objects', [])
+                for assoc in associated_data:
+                    assoc_entity = Entity(
+                        name=assoc.get('name', 'Associated Info'),
+                        type_name=assoc.get('type_name', 'InfoObject'),
+                        properties=assoc.get('properties', {})
+                    )
+                    
+                    if assoc.get('description'):
+                        assoc_entity.properties['description'] = assoc.get('description')
+                    
+                    created_assoc = self.kg.create_entity(self.kg_id, assoc_entity)
+                    self.stats.entities_created += 1
+                    
+                    # Create relationship
+                    from .arcgis_knowledge_client import Relationship
+                    rel = Relationship(
+                        source_entity_id=created_primary.entity_id,
+                        target_entity_id=created_assoc.entity_id,
+                        relationship_type="ASSOCIATED_WITH",
+                        properties={"source": "UDL"}
+                    )
+                    self.kg.create_relationship(self.kg_id, rel)
+                    self.stats.relationships_created += 1
+                    
+                    # Index associated in LightRAG
+                    if created_assoc.entity_id:
                         self.rag.index_entity(
-                            entity_id=entity.entity_id,
-                            name=entity.name,
-                            description=entity.properties.get('description', ''),
-                            properties=entity.properties,
-                            entity_type=entity.type_name
+                            entity_id=created_assoc.entity_id,
+                            name=created_assoc.name,
+                            description=assoc.get('description', ''),
+                            properties=created_assoc.properties,
+                            entity_type=created_assoc.type_name
                         )
                         self.stats.indexed_count += 1
                 
-                logger.info(f"Successfully ingested {len(created)} entities")
+                logger.info(f"Successfully ingested primary entity {created_primary.name} with {len(associated_data)} associated objects")
                 
             except Exception as e:
-                logger.error(f"Failed to create entities: {e}")
-                self.stats.fail_count += len(entities)
+                logger.error(f"Failed to ingest entity: {e}")
+                self.stats.fail_count += 1
     
     def get_status(self) -> Dict[str, Any]:
         """Get current service status and statistics."""

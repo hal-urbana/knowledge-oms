@@ -320,6 +320,7 @@ class UDLProcessor:
             return None
         
         entity_data = {
+            'id': message.value.get('id'),
             'name': message.value.get('name', message.value.get('id', 'Unknown')),
             'type_name': message.value.get('type', 'UDLObject'),
             'properties': self.extract_entity_properties(message),
@@ -328,6 +329,23 @@ class UDLProcessor:
         geo = self.extract_geographic_properties(message)
         if geo:
             entity_data['geometry'] = geo
+            # Ensure geometry is in properties as well for Knowledge Server
+            entity_data['properties']['Shape'] = geo
+        
+        # Extract associated objects
+        associated = []
+        if 'associated_objects' in message.value:
+            for obj in message.value['associated_objects']:
+                if 'id' in obj and 'type' in obj:
+                    associated.append({
+                        'id': obj.get('id'),
+                        'name': obj.get('name', obj.get('id')),
+                        'type_name': obj.get('type'),
+                        'properties': obj.get('properties', {}),
+                        'description': obj.get('description', '')
+                    })
+        
+        entity_data['associated_objects'] = associated
         
         self.processed_count += 1
         return entity_data

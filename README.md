@@ -95,8 +95,22 @@ The system integrates **LightRAG** (an open-source RAG framework) to provide int
 ### 4. Ingest Service (`automation/ingest_service.py`)
 - Core orchestration layer
 - Coordinates UDL consumption → Transform → ArcGIS + LightRAG
+- Supports **Object Management System (OMS)** relationships
+- Automatically links primary UDL objects to associated information objects
 - Batch processing and retry logic
-- Statistics and health monitoring
+
+---
+
+## OMS Features (Object Management System)
+
+The Knowledge OMS implementation specifically addresses the requirement to display primary objects from UDL along with associated information:
+
+1. **Primary Object Mapping**: Geographic properties (geometry/Shape) from UDL are preserved and ingested into ArcGIS Knowledge entities for display in ArcGIS Pro.
+2. **Automated Linking**: When a UDL message contains `associated_objects`, the system automatically:
+   - Creates the primary entity.
+   - Creates each associated information object as a related entity.
+   - Establishes `ASSOCIATED_WITH` (or specific sub-type) relationships in the knowledge graph.
+3. **Semantic Enrichment**: The LightRAG indexer captures both primary and associated objects, allowing for semantic queries that can cross-reference intelligence against geographic targets.
 
 ---
 
@@ -196,11 +210,11 @@ results = rag_indexer.search(
 ### Run Examples
 
 ```bash
+# Run the OMS Object Management System demo
+python -m examples.udl_oms_demo
+
 # Create a knowledge graph with sample entities
 python -m examples.create_knowledge_graph
-
-# Query the LightRAG index
-python -m examples.query_lightrag
 ```
 
 ---
