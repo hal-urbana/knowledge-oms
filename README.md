@@ -16,11 +16,9 @@ The system integrates **LightRAG** (an open-source RAG framework) to provide int
 
 ### Key Goals
 
-1. Build a knowledge base using Esri Knowledge Server (on Portal)
-2. Interface with external data sources, primarily UDL (Unified Data Library)
-3. Display content with geographic properties on ArcGIS Pro maps
-4. Show primary objects from UDL along with associated information objects
-5. Provide intelligent search via LightRAG integration
+- **ArcGIS Knowledge (2025/2026 update):** Enhanced support for registering NoSQL data stores and cloud-native graph databases (Net4j). ArcGIS 12.0 includes improved migration and cross-portal sharing for knowledge graphs.
+- **LightRAG Methodology:** Implements a dual-level retrieval paradigm (chunk-level and relationship-level) to provide contextually rich answers by understanding the complex inter-dependencies between primary and associated objects.
+- **UDL Integration:** The OMS uses Kafka as the primary ingestion backbone, mapping Space Force UDL schemas directly into Esri Knowledge Graph entities and relationships.
 
 ---
 
