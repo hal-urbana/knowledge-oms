@@ -94,13 +94,14 @@ The Knowledge OMS project integrates these three components as follows:
 4. **ArcGIS Knowledge**: Entity and relationship creation with geographic context
 5. **ArcGIS Pro Visualization**: Geographic display of knowledge objects
 
-### Key Integration Points
+### Integration Strategy (2026 Update)
 
-**UDL → ArcGIS Knowledge:**
-- UDL's graph store data maps to ArcGIS Knowledge property graphs
-- Geographic properties from UDL become spatial entities in ArcGIS
-- UDL API gateway enables direct data access
-- Standardized schemas facilitate data mapping
+The **\"Knowledge OMS\"** architecture leverages the latest features of Esri Knowledge and the LightRAG open-source project to create a seamless pipeline from space situational awareness (SSA) data to actionable GIS insights:
+
+1.  **Sourcing Data from the UDL**: The system leverages the UDL's established Data Distribution storefront and Open API to ingest raw space object data and associated documents.
+2.  **Structuring the Knowledge Graph with LightRAG**: Unstructured data (reports, manifests, observations) are processed by LightRAG using LLMs to perform entity-relationship extraction. LightRAG persists these relationships into a unified graph store.
+3.  **Connecting the Esri Knowledge Server**: Esri Knowledge connects directly to the graph store populated by LightRAG (supporting Neo4j or ArangoDB), enabling the data for ArcGIS visualization without duplicating pipelines.
+4.  **Geographic Display in ArcGIS Pro**: Once spatial properties are registered in the graph, ArcGIS Pro enables analysts to visualize primary UDL objects (e.g., satellites, vessels) on a map while simultaneously explore non-spatial relationships through link charts and entity cards.
 
 **LightRAG → ArcGIS Knowledge:**
 - LightRAG provides semantic search over knowledge graph content
