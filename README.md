@@ -242,10 +242,18 @@ python -m examples.create_knowledge_graph
 
 ## References
 
+### Documentation
 - [ArcGIS Knowledge Documentation](https://enterprise.arcgis.com/en/knowledge/latest/manage/manage-arcgis-knowledge.htm)
 - [Esri Knowledge Studio Guide](https://enterprise.arcgis.com/en/knowledge/latest/knowledge/getting-started-with-knowledge-studio.htm)
-- [LightRAG GitHub](https://github.comYOURORG/LightRAG)
-- [Unified Data Library (UDL)](https://udl.gov) *(placeholder)*
+- [LightRAG Research Summary](RESEARCH_SUMMARY.md) - Comprehensive research findings
+
+### Source Code
+- [LightRAG GitHub](https://github.com/HKUDS/LightRAG)
+- [LightRAG Research Paper](https://arxiv.org/abs/2410.05779)
+
+### Data Sources
+- [Unified Data Library Overview](https://www.ssc.spaceforce.mil/Portals/3/SDA%20Briefings/06.%20UDL%20Overview%20Overview.pdf)
+- [Space Force UDL Strategy](https://breakingdefense.com/2025/03/space-force-unveils-multi-front-push-to-fix-its-unified-data-library/)
 
 ---
 
