@@ -96,7 +96,12 @@ The Knowledge OMS project integrates these three components as follows:
 
 ### Integration Strategy (2026 Update)
 
-The **\"Knowledge OMS\"** architecture leverages the latest features of Esri Knowledge and the LightRAG open-source project to create a seamless pipeline from space situational awareness (SSA) data to actionable GIS insights:
+The **"Knowledge OMS"** architecture (Object Management System) leverages the latest features of Esri Knowledge and the LightRAG open-source project to create a seamless pipeline from space and maritime situational awareness data to actionable GIS insights.
+
+**Key 2026 Focus Areas:**
+- **Primary vs associated objects**: Explicit mapping of primary UDL objects (with geometry) to secondary information objects (reports, manifests) using complex relationships.
+- **Geographic properties**: Preserving spatial coordinates from UDL for direct map display in ArcGIS Pro.
+- **Contextual Search**: Using LightRAG to bridge the gap between geographic telemetry and document-based intelligence.
 
 1.  **Sourcing Data from the UDL**: The system leverages the UDL's established Data Distribution storefront and Open API to ingest raw space object data and associated documents.
 2.  **Structuring the Knowledge Graph with LightRAG**: Unstructured data (reports, manifests, observations) are processed by LightRAG using LLMs to perform entity-relationship extraction. LightRAG persists these relationships into a unified graph store. It is recommended to use an LLM with at least 32 billion parameters and a 64KB context length for this indexing stage.
